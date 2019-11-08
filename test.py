@@ -1,6 +1,6 @@
-from app.calculation import *
-from app.mysql import *
-def main():
+from baseDeal.calculation import *
+from baseDeal.mysql import *
+def baseDeal_main():
     star_data = print_item("star", -1)
     res = []
     for i in star_data:
@@ -30,5 +30,5 @@ def main():
     coefficient_va=coefficient()
     print("符号属性变量:"+str(coefficient.fuhao(coefficient_va,res,year)))
     print("顺序变量:"+str(coefficient.sunxu(coefficient_va,res)))
-    
-main()
+
+baseDeal_main()

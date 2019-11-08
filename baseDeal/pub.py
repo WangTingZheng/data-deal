@@ -1,5 +1,5 @@
-from app.mysql import *
-from app.apart import *
+from baseDeal.apart import *
+from baseDeal.mysql import *
 
 a = [1, 2, 2, 2, 3, 4, 4, 5, 7]
 

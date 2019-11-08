@@ -1,6 +1,5 @@
-from app.mysql import *
-from app.pub import *
-
+from baseDeal.pub import *
+from baseDeal.mysql import *
 
 def pub(item, limted):
     data = print_item(item, limted)
