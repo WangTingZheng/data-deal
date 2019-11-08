@@ -30,5 +30,5 @@ def main():
     coefficient_va=coefficient()
     print("符号属性变量:"+str(coefficient.fuhao(coefficient_va,res,year)))
     print("顺序变量:"+str(coefficient.sunxu(coefficient_va,res)))
-
+    
 main()
