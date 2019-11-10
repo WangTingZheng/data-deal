@@ -107,11 +107,23 @@ def insert_pub(db, info):
     cursor.execute(sql, (str(info["number"]), str(info["time"])))
 
 
+def get_string(string):
+    res=[]
+    tmp=""
+    for i in string:
+        try:
+            int(i)
+            res.append(i)
+        except:
+            pass
+    for i in res:
+        tmp+=i
+    return tmp
+
 # copy file item to mysql
 # path: file path likes "./data/film.json"
 def file_to_mysql(path):
     import json
-
     f = open(path, "r", encoding="utf-8")
     data = f.read()
     tmp = ""
@@ -121,6 +133,8 @@ def file_to_mysql(path):
     for i in data:
         if i == "\n":
             tmp = json.loads(tmp)
+            tmp['time'] = str(tmp['time'])
+            tmp['time'] = get_string(tmp['time'])
             insert_douban(db, tmp)
             tmp = ""
         else:
@@ -128,6 +142,7 @@ def file_to_mysql(path):
     db.close()
 
 
+# def delect_douban(db,)
 # get item from mysql database
 # item: like star
 # number: like 2
