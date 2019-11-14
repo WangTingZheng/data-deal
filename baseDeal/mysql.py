@@ -17,13 +17,13 @@ def new(account):
     return db
 
 
-def create_douban(db):
+def create_douban(db,table):
     db = new(account)
     cursor = db.cursor()
     cursor.execute("CREATE DATABASE if Not Exists pianyuan;")
     cursor.execute("USE pianyuan;")
     cursor.execute(
-        "create table if Not Exists douban(title text,type char(50),year char(50),star char(50),director text,actor text,pp char(50),time text,url char(100))ENGINE=MyISAM DEFAULT CHARSET=utf8;"
+        "create table if Not Exists "+table+"(title text,type char(50),year char(50),star char(50),director text,actor text,pp char(50),time text,url char(100))ENGINE=MyISAM DEFAULT CHARSET=utf8;"
     )
     db.commit()
 
@@ -42,10 +42,10 @@ def create_douban(db):
 #       "film_page":"https://movie.douban.com/subject/27621727/"
 # }
 # return: no return
-def insert_douban(db, info):
+def insert_douban(db, info,table):
     cursor = db.cursor()
     cursor.execute("USE pianyuan;")
-    sql = "insert into douban(title,type,year,star,director,actor,pp,time,url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    sql = "insert into "+table+"(title,type,year,star,director,actor,pp,time,url) values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     cursor.execute(
         sql,
         (
@@ -69,23 +69,22 @@ def insert_douban(db, info):
 # number > 0 : search number data
 # number <=0 : search all data
 # return : return data,tmp data, deal with in print_item()
-def select_douban(db, item, number):
+def select_douban(db, item, table,number):
     cursor = db.cursor()
     cursor.execute("USE pianyuan;")
     if number > 0:
-        sql = "select " + item + " from douban limit " + str(number)
+        sql = "select " + item + " from "+table+" limit " + str(number)
     else:
-        sql = "select " + item + " from douban;"
+        sql = "select " + item + " from "+table+";"
     res = cursor.execute(sql)
     return cursor.fetchall()
 
 
-def delect_pub(db):
+def delect(db,table):
     db = new(account)
     cursor = db.cursor()
-    cursor.execute("CREATE DATABASE if Not Exists pianyuan;")
     cursor.execute("USE pianyuan;")
-    cursor.execute("drop table if Exists pub;")
+    cursor.execute("drop table if Exists "+table+";")
     db.commit()
 
 
@@ -129,7 +128,7 @@ def file_to_mysql(path):
     tmp = ""
     res = []
     db = new(account)
-    create_douban(db)
+    create_douban(db,"douban")
     for i in data:
         if i == "\n":
             tmp = json.loads(tmp)
@@ -147,23 +146,42 @@ def file_to_mysql(path):
 # item: like star
 # number: like 2
 # return ['5.1', '3.9']
-def print_item(item, number):
+def database_to_dic(number,table):
     db = new(account)
-    create_douban(db)
+    create_douban(db,table)
     tmp = []
-    res = select_douban(db, item, number)
+    res = select_douban(db, "*", table,number)
     db.close()
     for i in res:
-        tmp.append(i[0])
+        info={}
+        info['title']=i[0]
+        info['type']=i[1]
+        info['year']=i[2]
+        info['star']=i[3]
+        info['director']=i[4]
+        info['actor']=i[5]
+        info['pp']=i[6]
+        info['time']=i[7]
+        info['url']=i[8]
+        tmp.append(info)
     return tmp
 
+def print_item(item, number,table):
+    temp=database_to_dic(number,table)
+    tmp=[]
+    for i in temp:
+        if item=="*":
+            tmp.append(i)
+        else:
+            tmp.append(i[item])
+    return tmp
 
 # create and insert data to a table
 # all: many list
 # every list: {"number":1,time:"1"}
 def run_pub(all):
     db = new(account)
-    delect_pub(db)
+    delect(db,"pub")
     create_pub(db)
     for i in all:
         insert_pub(db, i)
