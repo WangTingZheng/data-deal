@@ -2,7 +2,7 @@
 @Description: mysql operation of project KNN
 @Author: WangTingZheng
 @Date: 2019-11-12 21:25:02
-@LastEditTime: 2019-11-14 23:40:42
+@LastEditTime: 2019-11-15 11:25:55
 @LastEditors: WangTingZheng
 '''
 
@@ -11,6 +11,8 @@ from classification.distance import*
 from classification.sort_list import*
 
 position={'year':2,'star':3,'pp':6,'time':7} #
+account = {"host": "localhost", "username": "root", "password": "root"}
+
 #  1. get rid of data has vaild pp value
 #  2. take the first test_num.
 #  3. save those data to knn_test table as test data
@@ -50,10 +52,10 @@ def convert(test_num):
 # return: ['再生勇士', '动作,犯罪', '1995', '4.7', '张建亚,李国民', '郑浩南,张志坚,吴雪雯', '106',
 # '91', 'https://movie.douban.com/subject/3711787/', 34.132096331752024]
 def add_dist(test, pow_num):
-    account = {"host": "localhost", "username": "root", "password": "root"}
     db=new(account)
     data=select_douban(db,"*","knn_data",-1)
     res=[]
+    flag=0
     for i in data:
         tmp = list(i)
         year = float(tmp[2])
@@ -85,4 +87,21 @@ def return_calculate(test, pow_num, min_num):
         flag-=1
     return star/min_num
 
-add_dist({"year":2013,"star":3.9,"people":86,"time":112},2)
+def get_test(start, end, all=False):
+    db=new(account)
+    data=select_douban(db,"*","knn_test",-1)
+    res=[]
+    if all==True:
+        start = 0
+        end = len(data)
+    for j in range(start,end):
+        i = data[j]
+        tmp={}
+        tmp['year']=float(i[position['year']])
+        tmp['star']=float(i[position['star']])
+        tmp['people']=float(i[position['pp']])
+        tmp['time']=float(i[position['time']])
+        res.append(tmp)
+    return res
+
+#add_dist({"year":2013,"star":3.9,"people":86,"time":112},2)

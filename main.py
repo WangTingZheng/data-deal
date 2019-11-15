@@ -1,12 +1,12 @@
 '''
-@Description:
+@Description: main file to test
 @Author: WangTingZheng
 @Date: 2019-11-14 19:37:16
-@LastEditTime: 2019-11-14 23:54:14
+@LastEditTime: 2019-11-15 11:31:21
 @LastEditors: WangTingZheng
 '''
 
 
 from classification.KNN import*
 
-KNN(test, 2, 20)
+KNN_all("all",2, 20)
