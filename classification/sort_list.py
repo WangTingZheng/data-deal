@@ -2,7 +2,7 @@
 @Description: sort operation of KNN project
 @Author: WangTingZheng
 @Date: 2019-11-12 22:02:58
-@LastEditTime: 2019-11-14 21:05:32
+@LastEditTime: 2019-11-15 20:15:30
 @LastEditors: WangTingZheng
 '''
 
@@ -38,4 +38,8 @@ def return_sort(list_test):
         temp.append(res)
         i+=1
     return temp
-#print(return_sort([32,3,1,40,28,22]))
+def return_max_or_min_local(list_name, max=True):
+    temp=sorted(list_name)
+    for i in list_name:
+        if i==temp[len(temp)-1]:
+            return i
